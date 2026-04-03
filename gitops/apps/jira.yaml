@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: "https://github.com/hweyoung/atlassian-k8s-gitops.git"
     targetRevision: main
-    path: charts/jira
+    path: gitops/charts/jira
     helm:
       valueFiles:
         - values.yaml
