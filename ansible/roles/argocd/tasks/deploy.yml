@@ -1,0 +1,34 @@
+---
+- name: argocd 네임스페이스 생성
+  command: kubectl create namespace {{ argocd_namespace }}
+  register: ns_create
+  failed_when:
+    - ns_create.rc != 0
+    - "'already exists' not in ns_create.stderr"
+  changed_when: ns_create.rc == 0
+
+- name: argocd-values.yaml 생성
+  template:
+    src: argocd-values.yaml.j2
+    dest: "/home/{{ ansible_user }}/argocd-values.yaml"
+    mode: '0644'
+
+# helm upgrade --install은 설치와 업그레이드를 한 번에 처리합니다.
+# 설치되어 있지 않으면 install, 이미 있으면 upgrade로 동작합니다.
+# install/upgrade 분기를 따로 작성할 필요가 없어 코드가 단순해집니다.
+# - name: ArgoCD 배포 (설치 또는 업그레이드)
+#   command: >
+#     helm upgrade --install argocd argo/argo-cd
+#     -n {{ argocd_namespace }}
+#     --version {{ argocd_chart_version }}
+#     -f /home/{{ ansible_user }}/argocd-values.yaml
+#     --create-namespace
+- name: ArgoCD 배포 (설치 또는 업그레이드)
+  shell: >
+    /usr/bin/helm upgrade --install argocd argo/argo-cd
+    -n {{ argocd_namespace }}
+    --version {{ argocd_chart_version }}
+    -f /home/{{ ansible_user }}/argocd-values.yaml
+    --create-namespace
+    --wait
+    --timeout 5m 

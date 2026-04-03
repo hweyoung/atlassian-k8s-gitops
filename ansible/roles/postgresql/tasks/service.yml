@@ -1,0 +1,6 @@
+---
+- name: PostgreSQL 서비스 시작 및 활성화
+  systemd:
+    name: postgresql
+    state: started
+    enabled: yes

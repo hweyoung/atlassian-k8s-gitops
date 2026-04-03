@@ -1,0 +1,21 @@
+---
+- name: 외부 접속 허용 — listen_addresses
+  lineinfile:
+    path: /var/lib/pgsql/data/postgresql.conf
+    regexp: "^#?listen_addresses"
+    line: "listen_addresses = '*'"
+  notify: Restart PostgreSQL
+
+- name: 외부 접속 허용 — pg_hba.conf
+  lineinfile:
+    path: /var/lib/pgsql/data/pg_hba.conf
+    regexp: "^host.*all.*all.*192.168.0.0/16"
+    line: "host    all    all    192.168.0.0/16    md5"
+  notify: Restart PostgreSQL
+
+- name: 방화벽 개방
+  firewalld:
+    service: postgresql
+    permanent: yes
+    immediate: yes
+    state: enabled

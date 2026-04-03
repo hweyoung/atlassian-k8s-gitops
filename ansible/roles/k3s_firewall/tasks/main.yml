@@ -1,0 +1,29 @@
+---
+- name: K3s 필수 포트 개방
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  loop:
+    - "{{ k3s_api_port }}/tcp"
+    - "10250/tcp"
+    - "8472/udp"
+
+- name: K8s 내부 네트워크 Trusted 구역 허용
+  firewalld:
+    zone: trusted
+    source: "{{ item }}"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  loop:
+    - "10.42.0.0/16"
+    - "10.43.0.0/16"
+
+- name: Masquerade 허용
+  firewalld:
+    masquerade: yes
+    permanent: yes
+    immediate: yes
+    state: enabled

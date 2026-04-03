@@ -1,0 +1,15 @@
+global:
+  domain: "{{ argocd_domain }}"
+
+configs:
+  params:
+    # ArgoCD 자체는 HTTP로 서비스하고, SSL은 Ingress(Traefik)에서 처리합니다.
+    # 이 옵션이 없으면 ArgoCD가 HTTPS로 리다이렉트하면서 무한 루프가 발생합니다.
+    server.insecure: "true"
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: "{{ argocd_ingress_class }}"
+    annotations:
+      traefik.ingress.kubernetes.io/service.serversscheme: "http"

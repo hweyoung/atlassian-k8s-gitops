@@ -1,0 +1,10 @@
+---
+- name: PostgreSQL 패키지 설치
+  dnf:
+    name: postgresql-server
+    state: present
+
+- name: PostgreSQL 초기화 (최초 1회)
+  shell: postgresql-setup --initdb
+  args:
+    creates: /var/lib/pgsql/data/PG_VERSION

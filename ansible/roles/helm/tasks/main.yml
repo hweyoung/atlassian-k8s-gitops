@@ -1,0 +1,39 @@
+---
+- name: Helm 설치 여부 확인
+  shell: /usr/bin/helm version
+  register: helm_check
+  failed_when: false
+  changed_when: false
+
+- name: Helm 설치 여부 출력
+  debug:
+    msg: "{{ 'Helm 이미 설치됨 — ' + helm_check.stdout if helm_check.rc == 0 else 'Helm 미설치 — 설치를 시작합니다' }}"
+
+- name: Helm 3 설치
+  shell: |
+    export HELM_INSTALL_DIR=/usr/bin
+    curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+  when: helm_check.rc != 0
+
+- name: Helm 버전 확인
+  shell: /usr/bin/helm version
+  register: helm_version
+  changed_when: false
+
+- name: Helm 버전 출력
+  debug:
+    msg: "{{ helm_version.stdout }}"
+
+- name: Argo Helm 저장소 추가 (일반 유저로 실행)
+  shell: /usr/bin/helm repo add argo https://argoproj.github.io/argo-helm
+  become: no
+  register: repo_add
+  failed_when:
+    - repo_add.rc != 0
+    - "'already exists' not in repo_add.stderr"
+  changed_when: repo_add.rc == 0
+
+- name: Helm 저장소 업데이트 (일반 유저로 실행)
+  shell: /usr/bin/helm repo update
+  become: no
+  changed_when: false

@@ -1,0 +1,9 @@
+---
+- import_tasks: kubeconfig.yml
+  tags: ['argocd', 'kubeconfig']
+
+- import_tasks: deploy.yml
+  tags: ['argocd', 'deploy']
+
+- import_tasks: verify.yml
+  tags: ['argocd', 'verify']

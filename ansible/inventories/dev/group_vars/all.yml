@@ -1,0 +1,12 @@
+# Ansible 그룹 변수 파일 (dev 환경)
+env_name: "dev"
+
+# K3s 관련 변수
+k3s_master_host: "master-node.orb.local"
+k3s_api_port: "6443"
+
+# ArgoCD 관련 변수
+argocd_namespace: "argocd"
+argocd_chart_version: "7.7.0"
+argocd_domain: "argocd.orb.local"
+argocd_ingress_class: "traefik"

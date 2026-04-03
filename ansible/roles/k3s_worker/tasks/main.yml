@@ -1,0 +1,16 @@
+---
+- name: Master 노드에서 토큰 직접 읽어오기
+  slurp:
+    src: /var/lib/rancher/k3s/server/node-token
+  register: master_token
+  delegate_to: "{{ k3s_master_host }}"   # 이 Task만 master-node에서 실행
+  become: yes
+
+- name: K3s 워커 설치 및 마스터 연결
+  shell: >-
+    curl -sfL https://get.k3s.io |
+    K3S_URL=https://{{ k3s_master_host }}:{{ k3s_api_port }}
+    K3S_TOKEN={{ master_token['content'] | b64decode | trim }}
+    sh -
+  args:
+    creates: /usr/local/bin/k3s

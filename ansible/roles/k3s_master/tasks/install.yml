@@ -1,0 +1,16 @@
+---
+- name: K3s 마스터 설치
+  shell: "curl -sfL https://get.k3s.io | sh -"
+  args:
+    creates: /usr/local/bin/k3s
+
+- name: kubectl 심볼릭 링크 생성
+  file:
+    src: /usr/local/bin/kubectl
+    dest: /usr/bin/kubectl
+    state: link
+
+- name: Master 노드 토큰 읽어오기
+  slurp:
+    src: /var/lib/rancher/k3s/server/node-token
+  register: master_token

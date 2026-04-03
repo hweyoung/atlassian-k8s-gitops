@@ -1,0 +1,24 @@
+---
+- name: ArgoCD Ingress 확인
+  shell: kubectl get ingress -n {{ argocd_namespace }}
+  register: ingress_output
+  changed_when: false
+
+- name: Ingress 정보 출력
+  debug:
+    msg: "{{ ingress_output.stdout_lines }}"
+
+- name: 초기 관리자 비밀번호 추출
+  shell: >
+    kubectl -n {{ argocd_namespace }}
+    get secret argocd-initial-admin-secret
+    -o jsonpath="{.data.password}" | base64 -d
+  register: argocd_password
+  changed_when: false
+
+- name: 접속 정보 출력
+  debug:
+    msg:
+      - "URL      : http://{{ argocd_domain }}"
+      - "ID       : admin"
+      - "Password : {{ argocd_password.stdout }}"

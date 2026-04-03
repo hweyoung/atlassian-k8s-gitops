@@ -1,0 +1,6 @@
+---
+- name: NFS 서비스 시작 및 활성화
+  systemd:
+    name: nfs-server
+    state: started
+    enabled: yes
