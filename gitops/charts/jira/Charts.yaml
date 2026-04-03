@@ -1,0 +1,10 @@
+apiVersion: v2
+name: jira
+description: Atlassian Jira on K8s
+type: application
+version: 1.0.0
+
+dependencies:
+  - name: jira
+    version: "1.21.1"
+    repository: "https://atlassian.github.io/data-center-helm-charts"

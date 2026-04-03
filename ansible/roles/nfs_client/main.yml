@@ -1,0 +1,42 @@
+---
+# nfs-utils는 base Role에서 이미 설치했지만 명시적으로 확인합니다
+- name: NFS 클라이언트 패키지 설치 확인
+  dnf:
+    name: nfs-utils
+    state: present
+
+- name: NFS 마운트 포인트 생성
+  file:
+    path: /mnt/jira-shared-home
+    state: directory
+    mode: '0777'
+
+- name: NFS 마운트 테스트
+  command: >
+    showmount -e infra-node.orb.local
+  register: nfs_export_check
+  changed_when: false
+
+- name: NFS Export 목록 출력
+  debug:
+    msg: "{{ nfs_export_check.stdout_lines }}"
+
+- name: /etc/fstab에 NFS 마운트 등록
+  lineinfile:
+    path: /etc/fstab
+    regexp: "^infra-node.orb.local:/data/shared-home"
+    line: "infra-node.orb.local:/data/shared-home/jira-shared-home /mnt/jira-shared-home nfs defaults,_netdev 0 0"
+    state: present
+
+- name: NFS 마운트 실행
+  command: mount -a
+  changed_when: false
+
+- name: NFS 마운트 확인
+  command: df -h /mnt/jira-shared-home
+  register: mount_result
+  changed_when: false
+
+- name: 마운트 결과 출력
+  debug:
+    msg: "{{ mount_result.stdout_lines }}"
