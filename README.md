@@ -1,7 +1,8 @@
-### phase2-2
+### phase3
 기존 site_ansible.yml에 모여있던 구성 파일을 각 역할에 맞게 나눠 구성
 ansible-playbook site.yml
 ansible-playbook site.yml --syntax-check
+ansible-playbook site.yml --tags helm -v 
 
 
 ### 디렉토리 구조
