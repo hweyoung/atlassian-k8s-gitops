@@ -39,6 +39,9 @@ jira:
     create: true
     className: "traefik"
     host: "jira.orb.local"
+    https: false
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: web
 
   readinessProbe:
     initialDelaySeconds: 120
