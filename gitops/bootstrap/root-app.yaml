@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: "https://github.com/hweyoung/atlassian-k8s-gitops.git"
     targetRevision: main
-    path: apps                               # apps/ 폴더 안의 yaml을 모두 감시
+    path: gitops/apps                               # apps/ 폴더 안의 yaml을 모두 감시
 
   destination:
     server: "https://kubernetes.default.svc" #k8s 내부 주소
